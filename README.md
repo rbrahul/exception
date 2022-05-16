@@ -14,19 +14,19 @@ By design, Go doesn't offer any mechanism for Exception handling, to make the co
         if data != 100 {
 		    e.Throw(e.AssertionError("Expected value is not same as 100"))
         }
-	}).
-		Catch(e.In(e.AssertionErrorType, e.ValueErrorType), func(excep *Exception) {
-            fmt.Println("Message:",excep.Message)
-            fmt.Println("Exception Type:",excep.Type)
-            fmt.Println("Here is the Stack Trace:",excep.StackTrace)
-        }).
-		Catch(nil, func(excep *Exception) {
-            fmt.Println("I'll be executed as fallback:",excep.Message)
-        }).
-		Finally(func() {
-			fmt.Println("I have been executing always to clean the world!")
-		}).
-		Run()
+	})
+    .Catch(e.In(e.AssertionErrorType, e.ValueErrorType), func(excep *Exception) {
+        fmt.Println("Message:",excep.Message)
+        fmt.Println("Exception Type:",excep.Type)
+        fmt.Println("Here is the Stack Trace:",excep.StackTrace)
+    })
+    .Catch(nil, func(excep *Exception) {
+        fmt.Println("I'll be executed as fallback:",excep.Message)
+    })
+    .Finally(func() {
+		fmt.Println("I have been executing always to clean the world!")
+	})
+    .Run()
 ...
 ```
 
