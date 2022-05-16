@@ -1,5 +1,5 @@
 ## Go Try Catch Exception Handler
-By design, Go doesn't offer any mechanism for Exception handling. But Programmers from different backgrounds like Java, C++, Php might find it sceptical. Exception handling with *Try Catch Finally* is well adapted in all the modern languages. To ease the pain, this library offers utility functions for Exception Handling, which will help programmers to write Go code with *Try-Catch-Finally* approach.
+By design, Go doesn't offer any mechanism for Exception handling. But Programmers from different backgrounds like Java, C++, Php can be sceptical about the decision. Exception handling with *Try Catch Finally* is well adapted in all the modern languages. To ease the pain, this library offers utility functions for Exception Handling, which will help programmers to write Go code with *Try-Catch-Finally* approach.
 
 ### This how you can throw Exception and handle within Catch:
 
