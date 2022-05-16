@@ -12,6 +12,7 @@ type ExceptionType string
 const (
 	UnkownExceptionType ExceptionType = "Unkown"
 	IndexErrorType      ExceptionType = "IndexError"
+	RuntimeErrorType    ExceptionType = "RuntimeError"
 	ValueErrorType      ExceptionType = "ValueError"
 	NetworkErrorType    ExceptionType = "NetworkError"
 	SyntaxErrorType     ExceptionType = "SyntaxError"
@@ -109,6 +110,10 @@ func Throw(exp *Exception) {
 	panic(errorMsg)
 }
 
+func In(exceptionTypes ...ExceptionType) []ExceptionType {
+	return exceptionTypes
+}
+
 type Exception struct {
 	Message    string
 	Type       ExceptionType
@@ -140,7 +145,7 @@ func (c *ExceptionHandler) Finally(cb func()) *ExceptionHandler {
 func (c *ExceptionHandler) Run() {
 	c.executeTry()
 	c.executeCatchHanlder()
-	c.executeFinaly()
+	c.executeFinally()
 }
 
 func (c *ExceptionHandler) executeTry() {
@@ -187,11 +192,14 @@ func (c *ExceptionHandler) getMessage() string {
 }
 
 func (c *ExceptionHandler) executeCatchHanlder() {
+	if len(c.catchHandlers) == 0 {
+		return
+	}
 	if c.exception != nil && len(c.exception.Message) > 0 {
 		catchHandlerExecuted := false
 		var defaultHandler func(_ *Exception)
 		for _, handler := range c.catchHandlers {
-			if len(handler.Exceptions) > 0 {
+			if handler.Exceptions != nil && len(handler.Exceptions) > 0 {
 				for _, exceptionType := range handler.Exceptions {
 					exceptionTypePart := c.getExceptionType()
 					if exceptionTypePart == string(exceptionType) {
@@ -214,7 +222,7 @@ func (c *ExceptionHandler) executeCatchHanlder() {
 	}
 }
 
-func (c *ExceptionHandler) executeFinaly() {
+func (c *ExceptionHandler) executeFinally() {
 	if c.finallyHandler != nil {
 		c.finallyHandler()
 	}
