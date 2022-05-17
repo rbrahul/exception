@@ -147,17 +147,26 @@ type exceptionHandler struct {
 	finallyHandler func()
 }
 
+//Try executes your code and finds if there is any panic or exception and passes the exception to catch block
+func Try(cb func()) *exceptionHandler {
+	resp := &exceptionHandler{exception: &Exception{Message: ""}, catchHandlers: []catchblockEntry{}, finallyHandler: nil}
+	resp.tryHandler = cb
+	return resp
+}
+
 //Catch gets executed if any panic or exception ocurred inside Try. You can control the execution of any Catch block by passing a e.In() matcher which listens for certain Exception to be thrown. If you pass nil as first argument then the Catch block will be executed as default if there is no matching Catch block found.
 func (c *exceptionHandler) Catch(exceptionTypes []ExceptionType, cb func(excep *Exception)) *exceptionHandler {
 	c.catchHandlers = append(c.catchHandlers, catchblockEntry{Exceptions: exceptionTypes, Handler: cb})
 	return c
 }
 
+//Finally is executed always even if the Try block Succeeds or Fails. But it won't be executed if there is a uncaught or unhandled Exception
 func (c *exceptionHandler) Finally(cb func()) *exceptionHandler {
 	c.finallyHandler = cb
 	return c
 }
 
+//Run must be called to run the Try-Catch-Finally handlers. It should be always invoked at the end of the chain operations. It triggers the execution of Exception Handling flow.
 func (c *exceptionHandler) Run() {
 	c.executeTry()
 	c.executeCatchHanlder()
@@ -242,11 +251,4 @@ func (c *exceptionHandler) executeFinally() {
 	if c.finallyHandler != nil {
 		c.finallyHandler()
 	}
-}
-
-//Try executes your code and finds if there is any panic or exception and passes the exception to catch block
-func Try(cb func()) *exceptionHandler {
-	resp := &exceptionHandler{exception: &Exception{Message: ""}, catchHandlers: []catchblockEntry{}, finallyHandler: nil}
-	resp.tryHandler = cb
-	return resp
 }
