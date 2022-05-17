@@ -1,3 +1,7 @@
+[![Go Report Card](https://goreportcard.com/badge/github.com/rbrahul/exception)](https://goreportcard.com/report/github.com/rbrahul/exception)
+[![codecov](https://codecov.io/gh/rbrahul/exception/branch/main/graph/badge.svg?token=CW54A6HWS6)](https://codecov.io/gh/rbrahul/exception)
+
+
 ## Go Try Catch Exception Handler
 By design, Go doesn't offer any mechanism for Exception handling. But Programmers from different backgrounds like Java, C++, Php can be sceptical about the decision. Exception handling with *Try Catch Finally* is well adapted in all the modern languages. To ease the pain, this library offers utility functions for Exception Handling, which will help programmers to write Go code with *Try-Catch-Finally* approach.
 
