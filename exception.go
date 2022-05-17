@@ -98,12 +98,12 @@ func PermissionError(args ...interface{}) *Exception {
 	return New(PermissionErrorType, args...)
 }
 
-//ReferenceError should be used to throw an exception indicating the referrence related of issue. It accepts error message as an optional argument. Otherwise the ExceptionType is used as default error message.
+//ReferenceError should be used to throw an exception indicating the reference related of issue. It accepts error message as an optional argument. Otherwise the ExceptionType is used as default error message.
 func ReferenceError(args ...interface{}) *Exception {
 	return New(ReferenceErrorType, args...)
 }
 
-//SyntaxError should be used to throw an exception indicating the referrence related of issue. It accepts error message as an optional argument. Otherwise the ExceptionType is used as default error message.
+//SyntaxError should be used to throw an exception indicating the reference related of issue. It accepts error message as an optional argument. Otherwise the ExceptionType is used as default error message.
 func SyntaxError(args ...interface{}) *Exception {
 	return New(SyntaxErrorType, args...)
 }
@@ -154,7 +154,7 @@ func Try(cb func()) *exceptionHandler {
 	return resp
 }
 
-//Catch gets executed if any panic or exception ocurred inside Try. You can control the execution of any Catch block by passing a e.In() matcher which listens for certain Exception to be thrown. If you pass nil as first argument then the Catch block will be executed as default if there is no matching Catch block found.
+//Catch gets executed if any panic or exception occurred inside Try. You can control the execution of any Catch block by passing a e.In() matcher which listens for certain Exception to be thrown. If you pass nil as first argument then the Catch block will be executed as default if there is no matching Catch block found.
 func (c *exceptionHandler) Catch(exceptionTypes []ExceptionType, cb func(excep *Exception)) *exceptionHandler {
 	c.catchHandlers = append(c.catchHandlers, catchblockEntry{Exceptions: exceptionTypes, Handler: cb})
 	return c
