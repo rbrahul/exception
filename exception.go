@@ -10,7 +10,7 @@ import (
 type ExceptionType string
 
 const (
-	UnkownErrorType     ExceptionType = "UnkownError"
+	UnknownErrorType    ExceptionType = "UnknownError"
 	IndexErrorType      ExceptionType = "IndexError"
 	RuntimeErrorType    ExceptionType = "RuntimeError"
 	ValueErrorType      ExceptionType = "ValueError"
@@ -27,7 +27,7 @@ const (
 )
 
 var exceptionErrorMap map[ExceptionType]string = map[ExceptionType]string{
-	UnkownErrorType:     "Unkown Error",
+	UnknownErrorType:    "Unknown Error",
 	IndexErrorType:      "Index Error",
 	ValueErrorType:      "Value Error",
 	NetworkErrorType:    "Network Error",
@@ -221,7 +221,7 @@ func (c *exceptionHandler) executeCatchHanlder() {
 		return
 	}
 	if c.exception != nil && len(c.exception.Message) > 0 {
-		catchHandlerExecuted := false
+		var catchHandlerExecuted bool
 		var defaultHandler func(_ *Exception)
 		for _, handler := range c.catchHandlers {
 			if handler.Exceptions != nil && len(handler.Exceptions) > 0 {

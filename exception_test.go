@@ -91,7 +91,7 @@ func TestDefaultCatchBlockGetsExecutedForUnmatchedException(t *testing.T) {
 	var thrownExceptionType ExceptionType
 	var caughtFrom string
 	Try(func() {
-		Throw(New(UnkownErrorType, "Unkown Error"))
+		Throw(New(UnknownErrorType, "Unknown Error"))
 	}).
 		Catch(In(LookupErrorType), func(excep *Exception) {
 			thrownExceptionType = excep.Type
@@ -106,8 +106,8 @@ func TestDefaultCatchBlockGetsExecutedForUnmatchedException(t *testing.T) {
 			caughtFrom = "DefaultExceptionHandler"
 		}).Run()
 
-	if thrownExceptionType != UnkownErrorType {
-		t.Fatalf("Expecting Exception type to be %s but found %s", UnkownErrorType, thrownExceptionType)
+	if thrownExceptionType != UnknownErrorType {
+		t.Fatalf("Expecting Exception type to be %s but found %s", UnknownErrorType, thrownExceptionType)
 	}
 
 	if caughtFrom != "DefaultExceptionHandler" {
