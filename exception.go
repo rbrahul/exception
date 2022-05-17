@@ -10,7 +10,7 @@ import (
 type ExceptionType string
 
 const (
-	UnkownExceptionType ExceptionType = "Unkown"
+	UnkownExceptionType ExceptionType = "UnkownError"
 	IndexErrorType      ExceptionType = "IndexError"
 	RuntimeErrorType    ExceptionType = "RuntimeError"
 	ValueErrorType      ExceptionType = "ValueError"
@@ -27,7 +27,7 @@ const (
 )
 
 var exceptionErrorMap map[ExceptionType]string = map[ExceptionType]string{
-	UnkownExceptionType: "Unkown Exception",
+	UnkownExceptionType: "Unkown Error",
 	IndexErrorType:      "Index Error",
 	ValueErrorType:      "Value Error",
 	NetworkErrorType:    "Network Error",
@@ -40,6 +40,12 @@ var exceptionErrorMap map[ExceptionType]string = map[ExceptionType]string{
 	ReferenceErrorType:  "Reference Error",
 	EOFErrorType:        "EOF Error",
 	LookupErrorType:     "Lookup Error",
+}
+
+type Exception struct {
+	Message    string
+	Type       ExceptionType
+	StackTrace string
 }
 
 func New(exceptionType ExceptionType, args ...interface{}) *Exception {
@@ -112,12 +118,6 @@ func Throw(exp *Exception) {
 
 func In(exceptionTypes ...ExceptionType) []ExceptionType {
 	return exceptionTypes
-}
-
-type Exception struct {
-	Message    string
-	Type       ExceptionType
-	StackTrace string
 }
 
 type CatchblockEntry struct {
