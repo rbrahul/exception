@@ -10,7 +10,7 @@ import (
 type ExceptionType string
 
 const (
-	UnkownExceptionType ExceptionType = "UnkownError"
+	UnkownErrorType     ExceptionType = "UnkownError"
 	IndexErrorType      ExceptionType = "IndexError"
 	RuntimeErrorType    ExceptionType = "RuntimeError"
 	ValueErrorType      ExceptionType = "ValueError"
@@ -27,7 +27,7 @@ const (
 )
 
 var exceptionErrorMap map[ExceptionType]string = map[ExceptionType]string{
-	UnkownExceptionType: "Unkown Error",
+	UnkownErrorType:     "Unkown Error",
 	IndexErrorType:      "Index Error",
 	ValueErrorType:      "Value Error",
 	NetworkErrorType:    "Network Error",
@@ -48,6 +48,7 @@ type Exception struct {
 	StackTrace string
 }
 
+//New is constructor which is used to create a new Exception
 func New(exceptionType ExceptionType, args ...interface{}) *Exception {
 	message, ok := exceptionErrorMap[exceptionType]
 	if !ok {
@@ -62,93 +63,108 @@ func New(exceptionType ExceptionType, args ...interface{}) *Exception {
 	}
 }
 
+//AssertionError should be used to throw an exception indicating assertion failure. It accepts error message as an optional argument. Otherwise the ExceptionType is used as default error message.
 func AssertionError(args ...interface{}) *Exception {
 	return New(AssertionErrorType, args...)
 }
 
+//IndexError should be used to throw an exception indicating index is out of bound failure. It accepts error message as an optional argument. Otherwise the ExceptionType is used as default error message.
 func IndexError(args ...interface{}) *Exception {
 	return New(IndexErrorType, args...)
 }
 
+//ConnectionError should be used to throw an exception indicating connection related failure. It accepts error message as an optional argument. Otherwise the ExceptionType is used as default error message.
 func ConnectionError(args ...interface{}) *Exception {
 	return New(ConnectionErrorType, args...)
 }
 
+//EOFError should be used to throw an exception indicating end of file related issue. It accepts error message as an optional argument. Otherwise the ExceptionType is used as default error message.
 func EOFError(args ...interface{}) *Exception {
 	return New(EOFErrorType, args...)
 }
 
+//LookupError should be used to throw an exception indicating the key is unavailable in a map. It accepts error message as an optional argument. Otherwise the ExceptionType is used as default error message.
 func LookupError(args ...interface{}) *Exception {
 	return New(LookupErrorType, args...)
 }
 
+//NetworkError should be used to throw an exception indicating the network related issue. It accepts error message as an optional argument. Otherwise the ExceptionType is used as default error message.
 func NetworkError(args ...interface{}) *Exception {
 	return New(NetworkErrorType, args...)
 }
 
+//PermissionError should be used to throw an exception indicating the permission related issue. It accepts error message as an optional argument. Otherwise the ExceptionType is used as default error message.
 func PermissionError(args ...interface{}) *Exception {
 	return New(PermissionErrorType, args...)
 }
 
+//ReferenceError should be used to throw an exception indicating the referrence related of issue. It accepts error message as an optional argument. Otherwise the ExceptionType is used as default error message.
 func ReferenceError(args ...interface{}) *Exception {
 	return New(ReferenceErrorType, args...)
 }
 
+//SyntaxError should be used to throw an exception indicating the referrence related of issue. It accepts error message as an optional argument. Otherwise the ExceptionType is used as default error message.
 func SyntaxError(args ...interface{}) *Exception {
 	return New(SyntaxErrorType, args...)
 }
 
+//TypeError should be used to throw an exception indicating the type is not as expected. It accepts error message as an optional argument. Otherwise the ExceptionType is used as default error message.
 func TypeError(args ...interface{}) *Exception {
 	return New(TimeoutErrorType, args...)
 }
 
+//TimeoutError should be used to throw an exception indicating the Timeout related issue. It accepts error message as an optional argument. Otherwise the ExceptionType is used as default error message.
 func TimeoutError(args ...interface{}) *Exception {
 	return New(TimeoutErrorType, args...)
 }
 
+//ValueError should be used to throw an exception indicating the value is not in correct format. It accepts error message as an optional argument. Otherwise the ExceptionType is used as default error message.
 func ValueError(args ...interface{}) *Exception {
 	return New(ValueErrorType, args...)
 }
 
+//Throw is used to throw an exception. You can use some builtin Exceptions such as LookupError, PermissionError, NetworkError etc. which are offered by this library or you can also create your custom Exception and throw. It accepts error message as an optional argument. Otherwise the ExceptionType is used as default error message.
 func Throw(exp *Exception) {
 	message := exp.Message
 	errorMsg := fmt.Sprintf("Message::%s||Exception::%s", message, exp.Type)
 	panic(errorMsg)
 }
 
+// In accepts a variable number of ExceptionType as arguments. It creates a list ExceptionType that will be used for the mathcing of exception.
 func In(exceptionTypes ...ExceptionType) []ExceptionType {
 	return exceptionTypes
 }
 
-type CatchblockEntry struct {
+type catchblockEntry struct {
 	Exceptions []ExceptionType
 	Handler    func(arg *Exception)
 }
 
-type ExceptionHandler struct {
+type exceptionHandler struct {
 	exception      *Exception
 	tryHandler     func()
-	catchHandlers  []CatchblockEntry
+	catchHandlers  []catchblockEntry
 	finallyHandler func()
 }
 
-func (c *ExceptionHandler) Catch(exceptionTypes []ExceptionType, cb func(excep *Exception)) *ExceptionHandler {
-	c.catchHandlers = append(c.catchHandlers, CatchblockEntry{Exceptions: exceptionTypes, Handler: cb})
+//Catch gets executed if any panic or exception ocurred inside Try. You can control the execution of any Catch block by passing a e.In() matcher which listens for certain Exception to be thrown. If you pass nil as first argument then the Catch block will be executed as default if there is no matching Catch block found.
+func (c *exceptionHandler) Catch(exceptionTypes []ExceptionType, cb func(excep *Exception)) *exceptionHandler {
+	c.catchHandlers = append(c.catchHandlers, catchblockEntry{Exceptions: exceptionTypes, Handler: cb})
 	return c
 }
 
-func (c *ExceptionHandler) Finally(cb func()) *ExceptionHandler {
+func (c *exceptionHandler) Finally(cb func()) *exceptionHandler {
 	c.finallyHandler = cb
 	return c
 }
 
-func (c *ExceptionHandler) Run() {
+func (c *exceptionHandler) Run() {
 	c.executeTry()
 	c.executeCatchHanlder()
 	c.executeFinally()
 }
 
-func (c *ExceptionHandler) executeTry() {
+func (c *exceptionHandler) executeTry() {
 	defer func() {
 		err := recover()
 		if err != nil {
@@ -167,7 +183,7 @@ func (c *ExceptionHandler) executeTry() {
 	c.tryHandler()
 }
 
-func (c *ExceptionHandler) getExceptionType() string {
+func (c *exceptionHandler) getExceptionType() string {
 	messageItems := strings.Split(c.exception.Message, "||")
 	if len(messageItems) > 0 {
 		exceptionPart := messageItems[1]
@@ -179,7 +195,7 @@ func (c *ExceptionHandler) getExceptionType() string {
 	return ""
 }
 
-func (c *ExceptionHandler) getMessage() string {
+func (c *exceptionHandler) getMessage() string {
 	messageItems := strings.Split(c.exception.Message, "||")
 	if len(messageItems) > 0 {
 		messagePart := messageItems[0]
@@ -191,7 +207,7 @@ func (c *ExceptionHandler) getMessage() string {
 	return ""
 }
 
-func (c *ExceptionHandler) executeCatchHanlder() {
+func (c *exceptionHandler) executeCatchHanlder() {
 	if len(c.catchHandlers) == 0 {
 		return
 	}
@@ -222,14 +238,15 @@ func (c *ExceptionHandler) executeCatchHanlder() {
 	}
 }
 
-func (c *ExceptionHandler) executeFinally() {
+func (c *exceptionHandler) executeFinally() {
 	if c.finallyHandler != nil {
 		c.finallyHandler()
 	}
 }
 
-func Try(cb func()) *ExceptionHandler {
-	resp := &ExceptionHandler{exception: &Exception{Message: ""}, catchHandlers: []CatchblockEntry{}, finallyHandler: nil}
+//Try executes your code and finds if there is any panic or exception and passes the exception to catch block
+func Try(cb func()) *exceptionHandler {
+	resp := &exceptionHandler{exception: &Exception{Message: ""}, catchHandlers: []catchblockEntry{}, finallyHandler: nil}
 	resp.tryHandler = cb
 	return resp
 }
