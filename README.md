@@ -30,4 +30,38 @@ By design, Go doesn't offer any mechanism for Exception handling. But Programmer
 ...
 ```
 
-## Documentation will be updated soon!
+### Throwing a custom exception
+
+You have to define a exception variable with ExceptionType.
+
+```go
+const SomethingWentWrongError  e.ExceptionType = "SomethingWentWrongError"
+```
+
+Now you have to initialize and throw your exception via e.New constructor. You can pass a proper error message as optional argument.
+
+```go
+    e.Try(func() {
+        e.Throw(e.New(SomethingWentWrongError, "Something went worng!"))
+	})
+    .Catch(e.In(SomethingWentWrongError), func(excep *Exception) {
+        fmt.Println("Message:",excep.Message)
+        fmt.Println("Exception Type:",excep.Type)
+    })
+    .Finally(func() {
+		fmt.Println("I'm Gonna fix it!")
+	})
+    .Run()
+```
+
+### You can wrap any panic with try-catch and recover it elegently
+
+```go
+    e.Try(func() {
+        panic("I'm gonna panic but don't worry")
+	})
+    .Catch(nil, func(excep *Exception) {
+        fmt.Println("I knew you are gonna catch me :p", excep.Message)
+    })
+    .Run()
+```

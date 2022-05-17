@@ -1,6 +1,9 @@
 package exception
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 func TestTryGetsExecuted(t *testing.T) {
 	var hasTryExecuted bool
@@ -158,5 +161,20 @@ func TestNestedExceptionWasHandledAsExpected(t *testing.T) {
 
 	if secondThrownExceptionType != CustomExceptionType {
 		t.Fatalf("Expecting second exception to be %s but found %s", CustomExceptionType, secondThrownExceptionType)
+	}
+}
+
+func TestPanicIsRecoveredInDefaultCatch(t *testing.T) {
+	errorMsg := "I'm gonna panic but don't worry"
+	var caughtErrorMsg string
+	Try(func() {
+		panic(errorMsg)
+	}).Catch(nil, func(excep *Exception) {
+		caughtErrorMsg = excep.Message
+		fmt.Println("I knew you are gonna catch me :p", excep.Message)
+	}).Run()
+
+	if caughtErrorMsg != errorMsg {
+		t.Fatalf("Expecting error message to be %s but found %s", errorMsg, caughtErrorMsg)
 	}
 }
