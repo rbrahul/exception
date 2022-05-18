@@ -1,3 +1,6 @@
+![Exception](gopher.png)
+
+![Go test workflow](https://github.com/rbrahul/exception/actions/workflows/go.yml/badge.svg)
 [![Go Report Card](https://goreportcard.com/badge/github.com/rbrahul/exception)](https://goreportcard.com/report/github.com/rbrahul/exception)
 [![codecov](https://codecov.io/gh/rbrahul/exception/branch/main/graph/badge.svg?token=CW54A6HWS6)](https://codecov.io/gh/rbrahul/exception)
 [![Go Reference](https://pkg.go.dev/badge/github.com/rbrahul/exception.svg)](https://pkg.go.dev/github.com/rbrahul/exception)
