@@ -221,7 +221,6 @@ func (c *exceptionHandler) executeCatchHanlder() {
 		return
 	}
 	if c.exception != nil && len(c.exception.Message) > 0 {
-		var catchHandlerExecuted bool
 		var defaultHandler func(_ *Exception)
 		for _, handler := range c.catchHandlers {
 			if handler.Exceptions != nil && len(handler.Exceptions) > 0 {
@@ -231,7 +230,6 @@ func (c *exceptionHandler) executeCatchHanlder() {
 						c.exception.Type = ExceptionType(exceptionTypePart)
 						c.exception.Message = c.getMessage()
 						handler.Handler(c.exception)
-						catchHandlerExecuted = true
 						return
 					}
 				}
@@ -239,7 +237,7 @@ func (c *exceptionHandler) executeCatchHanlder() {
 				defaultHandler = handler.Handler
 			}
 		}
-		if !catchHandlerExecuted && defaultHandler != nil {
+		if defaultHandler != nil {
 			c.exception.Type = ExceptionType(c.getExceptionType())
 			c.exception.Message = c.getMessage()
 			defaultHandler(c.exception)
